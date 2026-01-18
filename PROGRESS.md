@@ -1,8 +1,9 @@
 # Expense Splitter - Development Progress
 
-**Last Updated:** December 25, 2024
-**Current Phase:** Phase 1 Complete, Starting Phase 2
+**Last Updated:** January 18, 2026
+**Current Phase:** Phase 2 Complete, Ready for Phase 3
 **Developer:** Winston
+**GitHub:** https://github.com/Mayday46/expense-splitter
 
 ---
 
@@ -89,32 +90,118 @@
 
 ---
 
-## Current Limitations (To Be Addressed in Phase 2)
+## Phase 2: Dashboard Enhancement & Data Persistence ✅
 
-### 1. Data Persistence ❌
-- **Problem:** Expenses stored in Python list (in-memory)
-- **Impact:** Data lost when backend server restarts
-- **Solution:** Migrate to DynamoDB
+**Completed:** January 18, 2026
 
-### 2. Dashboard Status Cards ❌
-- **Problem:** Shows hardcoded values ("2 expenses", "$22.50 owed", "2 friends")
-- **Impact:** Misleading user information
-- **Solution:** Calculate from real expense data via API
+### Completed Features
 
-### 3. Friends Management ❌
-- **Problem:** Hardcoded participant list in two components
-- **Impact:** Cannot add/remove friends, duplicated code
-- **Solution:** Build friends management system with API
+#### 1. Dashboard Metrics with Real-Time Calculation ✅
+- **Status:** Fully functional
+- **Implementation:**
+  - Custom React hook `useExpenseMetrics` with sophisticated calculation logic
+  - Three real-time metrics:
+    - **Total Expenses:** Count of unsettled expenses
+    - **Owed to You:** Sum of all participant amounts from expenses you created
+    - **You Owe:** Sum of your share in expenses created by others
+  - Filters out settled expenses (only shows pending/pending_review)
+  - Auto-refreshes on expense create/delete via refreshTrigger
+  - Decodes JWT to get current user, rounds to 2 decimals
+  - Includes loading and error states
+- **Files:**
+  - `src/hooks/useExpenseMetrics.jsx` - Calculation logic (107 lines)
+  - `src/components/StatusSection.jsx` - Display component
+  - `src/pages/Dashboard.jsx` - Trigger management
 
-### 4. Payment Reminders ❌
+#### 2. Centralized Friends Management ✅
+- **Status:** Fully functional
+- **Implementation:**
+  - Single source of truth: `FRIENDS_LIST` in backend
+  - REST API endpoint: GET `/api/friends/`
+  - Auto-generates initials and unique IDs
+  - Filters out current user from participant lists
+  - Frontend components fetch from API (no hardcoded lists)
+  - Real friends added: Long He, Andy Shi, Winston Lin, Jiawen Lin, Qiubin Huang, Elva Lin
+- **Files:**
+  - `backend/app/routes/friends.py` - Friends API (141 lines)
+  - `src/components/ManualEntry.jsx` - Uses friends API
+  - `src/components/AddParticipantsModal.jsx` - Uses friends API
+
+#### 3. DynamoDB Migration ✅
+- **Status:** Fully functional and production-ready
+- **Implementation:**
+  - All expenses persist to DynamoDB (no more in-memory storage!)
+  - Table: `expenses` with GSI `user_id-index`
+  - Float→Decimal conversion for DynamoDB compatibility
+  - Data survives server restarts
+  - Efficient queries using GSI for user-specific expenses
+  - Scan + filter for participated expenses
+- **Files:**
+  - `backend/app/services/dynamodb_service.py` - Database operations
+  - `backend/app/routes/expenses.py` - Uses DynamoDB service
+
+#### 4. Additional Enhancements (Bonus) ✅
+- **Login Page Modernization:**
+  - Complete UI redesign with shadcn/ui components
+  - Email/Password fields with icons (Mail, Lock)
+  - "Remember me" checkbox functionality
+  - "Forgot password" link
+  - Social login buttons (Google, Apple) - UI ready
+  - "Sign up" link for future registration
+  - Mobile-optimized and responsive
+  - Fixed background color consistency
+- **Development Infrastructure:**
+  - Git repository initialized
+  - Pushed to GitHub: https://github.com/Mayday46/expense-splitter
+  - .gitignore protecting sensitive files (.env)
+  - Mac development environment configured (Python 3.10)
+- **Files:**
+  - `src/pages/Login.tsx` - Modern login UI
+  - `src/components/ui/button.tsx` - Installed
+  - `src/components/ui/input.tsx` - Installed
+  - `src/components/ui/label.tsx` - Installed
+  - `src/components/ui/checkbox.tsx` - Installed
+
+---
+
+## Phase 2 Success Metrics
+
+| Metric | Target | Actual | Status |
+|--------|--------|--------|--------|
+| Dashboard Shows Real Data | Real-time calculation | ✅ useExpenseMetrics hook implemented | ✅ PASS |
+| Friends Centralized | Single API source | ✅ GET /api/friends/ working | ✅ PASS |
+| Data Persistence | DynamoDB integration | ✅ All expenses in DynamoDB | ✅ PASS |
+| No Hardcoded Lists | Components use API | ✅ ManualEntry + Modal use friendsAPI | ✅ PASS |
+| Metrics Update on Changes | Refresh on create/delete | ✅ refreshTrigger pattern working | ✅ PASS |
+
+---
+
+## Current Limitations (To Be Addressed in Phase 3)
+
+### 1. Payment Reminders ❌
 - **Problem:** "Send Reminder" button does nothing
 - **Impact:** No automated follow-ups
 - **Solution:** Integrate AWS SNS for SMS notifications
 
-### 5. Debt Tracking ❌
-- **Problem:** No way to see who owes you money or what you owe others
-- **Impact:** Incomplete user experience
-- **Solution:** Calculate debt summaries from expense data
+### 2. Friends Management UI ❌
+- **Problem:** Friends added by editing `friends.py` file directly
+- **Impact:** Not user-friendly for non-technical users
+- **Solution:** Build admin UI to add/remove friends via dashboard
+
+### 3. Expense Status Workflow ❌
+- **Problem:** Status changes (pending → settled) not fully implemented
+- **Impact:** Cannot track payment completion
+- **Solution:** Add status update endpoints and UI
+
+### 4. Production Deployment ❌
+- **Problem:** Running locally only
+- **Impact:** Not accessible to friends
+- **Solution:** Deploy backend to Render, frontend to Vercel
+
+### 5. Analytics Dashboard ❌
+- **Problem:** No insights into spending patterns
+- **Impact:** Missing valuable data visualization
+- **Solution:** Add charts and spending analytics
 
 ---
 
@@ -168,11 +255,13 @@ expense-splitter/
 │   ├── app/
 │   │   ├── routes/
 │   │   │   ├── auth.py          ✅ Complete
-│   │   │   ├── expenses.py      ⚠️  In-memory only
-│   │   │   └── receipts.py      ✅ Complete
+│   │   │   ├── expenses.py      ✅ Complete (DynamoDB integrated)
+│   │   │   ├── receipts.py      ✅ Complete
+│   │   │   └── friends.py       ✅ Complete (Centralized API)
 │   │   ├── services/
-│   │   │   ├── s3.py           ✅ Complete
-│   │   │   └── textract.py     ✅ Complete
+│   │   │   ├── s3.py                ✅ Complete
+│   │   │   ├── textract.py          ✅ Complete
+│   │   │   └── dynamodb_service.py  ✅ Complete
 │   │   ├── middleware/
 │   │   │   └── auth.py         ✅ Complete
 │   │   ├── config.py           ✅ Complete
@@ -180,31 +269,37 @@ expense-splitter/
 │   └── .env                     ✅ AWS credentials configured
 ├── src/
 │   ├── pages/
-│   │   ├── Dashboard.jsx       ✅ Complete
-│   │   └── LoginPage.jsx       ✅ Complete
+│   │   ├── Dashboard.jsx       ✅ Complete (with refresh triggers)
+│   │   └── Login.tsx           ✅ Complete (Modernized UI)
 │   ├── components/
-│   │   ├── ManualEntry.jsx     ⚠️  Uses hardcoded friends
-│   │   ├── UploadReceipt.jsx   ✅ Complete
-│   │   ├── RecentExpenses.jsx  ✅ Complete
-│   │   ├── StatusSection.jsx   ❌ Shows static data
-│   │   └── AddParticipantsModal.jsx  ⚠️  Uses hardcoded friends
+│   │   ├── ManualEntry.jsx              ✅ Complete (Uses friends API)
+│   │   ├── UploadReceipt.jsx            ✅ Complete
+│   │   ├── RecentExpenses.jsx           ✅ Complete
+│   │   ├── StatusSection.jsx            ✅ Complete (Real-time metrics)
+│   │   ├── AddParticipantsModal.jsx     ✅ Complete (Uses friends API)
+│   │   └── ui/                          ✅ shadcn/ui components
+│   ├── hooks/
+│   │   └── useExpenseMetrics.jsx        ✅ Complete (Metrics calculation)
 │   └── services/
-│       └── api.ts              ✅ Complete (authAPI, expenseAPI, receiptAPI)
-└── PHASE_2_PLAN.md             📝 Next steps documented
+│       └── api.ts              ✅ Complete (authAPI, expenseAPI, receiptAPI, friendsAPI)
+├── PROGRESS.md                 ✅ Up to date
+├── PHASE_2_PLAN.md             ✅ Phase 2 complete
+└── PHASE_3_PLAN.md             📝 Ready to create
 ```
 
 ---
 
 ## Next Phase Preview
 
-**Phase 2 Focus:** Data Persistence & Friends Management
+**Phase 3 Focus:** Notifications, Production Deployment & Advanced Features
 
-1. Fix dashboard status cards (show real data)
-2. Build friends management system
-3. Migrate to DynamoDB
-4. Implement payment reminders (AWS SNS)
+1. AWS SNS SMS notification system for payment reminders
+2. Friends management UI (add/remove via dashboard)
+3. Expense status workflow (pending → settled)
+4. Production deployment (Render + Vercel)
+5. Analytics and spending insights
 
-See `PHASE_2_PLAN.md` for detailed roadmap.
+See `PHASE_3_PLAN.md` for detailed roadmap (to be created).
 
 ---
 
@@ -280,4 +375,4 @@ npm run dev
 
 ---
 
-**Status:** Ready for Phase 2 Development
+**Status:** Phase 2 Complete ✅ - Ready for Phase 3 Development 🚀

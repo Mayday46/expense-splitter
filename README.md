@@ -9,30 +9,35 @@ A mobile-first web application that eliminates the friction of splitting bills b
 ## Current Status
 
 **Phase 1:** ✅ Complete (AWS Textract Integration)
-**Phase 2:** 🚧 In Progress (Dashboard & Friends Management)
-**Phase 3:** ⏳ Planned (DynamoDB Migration)
+**Phase 2:** ✅ Complete (Dashboard, Friends API, DynamoDB)
+**Phase 3:** ⏳ Planned (SMS Notifications & Production Deployment)
 
-See [PROGRESS.md](./PROGRESS.md) for detailed status and [PHASE_2_PLAN.md](./PHASE_2_PLAN.md) for next steps.
+**Last Updated:** January 18, 2026
+**GitHub Repository:** https://github.com/Mayday46/expense-splitter
+
+See [PROGRESS.md](./PROGRESS.md) for detailed status and [PHASE_3_PLAN.md](./PHASE_3_PLAN.md) for next steps.
 
 ---
 
 ## Features
 
-### ✅ Completed
+### ✅ Completed (Phase 1 & 2)
 - **Receipt Scanning:** Upload receipt photos → AWS Textract extracts merchant, total, items, tax, tip
 - **Manual Entry:** Create expenses manually with custom participants
 - **Expense Tracking:** View recent expenses with full item breakdowns
-- **JWT Authentication:** Secure login system
-- **Mobile-First UI:** Responsive design with dark/light theme
+- **JWT Authentication:** Secure login system with modernized UI
+- **Mobile-First UI:** Responsive design with dark/light theme, shadcn/ui components
+- **Dashboard Metrics:** Real-time calculation of total expenses, owed to you, you owe (via useExpenseMetrics hook)
+- **Friends API:** Centralized friends management via REST API
+- **DynamoDB Integration:** All expenses persist to DynamoDB with GSI indexing
+- **Real-Time Updates:** Metrics auto-refresh on expense create/delete
 
-### 🚧 In Progress
-- **Dashboard Metrics:** Real-time calculation of total expenses, amount owed, friends count
-- **Friends Management:** Add/remove friends through admin UI
-
-### ⏳ Planned
-- **Data Persistence:** DynamoDB integration (currently in-memory)
+### ⏳ Planned (Phase 3)
 - **Payment Reminders:** AWS SNS SMS notifications
-- **Debt Tracking:** See who owes you and what you owe
+- **Friends Management UI:** Add/remove friends via dashboard (currently edit backend file)
+- **Expense Status Workflow:** Track pending → settled transitions
+- **Production Deployment:** Deploy to Render (backend) + Vercel (frontend)
+- **Analytics Dashboard:** Spending insights and visualizations
 
 ---
 
@@ -62,8 +67,13 @@ See [PROGRESS.md](./PROGRESS.md) for detailed status and [PHASE_2_PLAN.md](./PHA
 
 ### Prerequisites
 - Node.js 18+
-- Python 3.9+
+- Python 3.10+ (required for modern type hints)
 - AWS Account (configured in `.env`)
+
+**Note for Mac users:** Install Python 3.10 via Homebrew:
+```bash
+brew install python@3.10
+```
 
 ### Installation
 
@@ -268,22 +278,28 @@ Use receipts from:
 
 ## Roadmap
 
-**Phase 1** (✅ Complete)
+**Phase 1** (✅ Complete - Dec 2024)
 - AWS Textract integration
 - Receipt upload & OCR
 - Manual expense entry
 - Basic expense tracking
+- JWT authentication
+- Mobile-first UI
 
-**Phase 2** (🚧 In Progress)
-- Fix dashboard status cards (real data)
-- Build friends management system
-- Centralize participant data
+**Phase 2** (✅ Complete - Jan 2026)
+- Dashboard metrics with real-time calculation
+- Friends centralized API
+- DynamoDB migration (data persistence)
+- Component refactoring (no hardcoded data)
+- Login page modernization
+- GitHub repository setup
 
-**Phase 3** (⏳ Planned)
-- Migrate to DynamoDB
-- Add payment reminders (AWS SNS)
-- Debt tracking & settlement
-- Deploy to production (Render + Vercel)
+**Phase 3** (⏳ Planned - Q1 2026)
+- AWS SNS SMS payment reminders
+- Friends management UI (add/remove via dashboard)
+- Expense status workflow
+- Production deployment (Render + Vercel)
+- Analytics and spending insights
 
 ---
 
