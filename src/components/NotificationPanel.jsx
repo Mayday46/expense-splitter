@@ -104,7 +104,7 @@ const NotificationPanel = () => {
                 </Button>
             </PopoverTrigger>
 
-            <PopoverContent align="end" className="w-[380px] p-0 z-[100]">
+            <PopoverContent align="center" className="w-[380px] p-0 z-[100]">
                 <Tabs value={tab} onValueChange={setTab}>
 
                     <div className="flex items-center justify-between border-b px-3 py-2">
