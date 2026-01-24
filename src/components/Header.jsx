@@ -1,6 +1,8 @@
 
+import { Button } from "@/components/ui/button";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
+import NotificationPanel from "./NotificationPanel";
 
 const Header = () => {
 
@@ -38,9 +40,11 @@ const Header = () => {
             <div className = "flex items-center justify-center gap-1">
 
                 <h1 className = "text-2xl md:text-4xl font-bold tracking-tight"> Expense Splitter </h1>
-                <button onClick = {toggleTheme} className = "p-1.5 hover:bg-accent rounded-md mt-2 md:mt-3">
-                    { theme === "light" ? <MoonIcon className = "h-5 w-5"/> : <SunIcon className = "h-5 w-5"/> }
-                </button>
+                <NotificationPanel />
+                <Button onClick = {toggleTheme} size = "icon" variant = "ghost" className = "p-1.5 hover:bg-accent rounded-md mt-2 md:mt-3">
+                    { theme === "light" ? <MoonIcon /> : <SunIcon /> }
+                </Button>
+    
 
             </div>
             <p className = "text-sm md:text-base text-muted-foreground hidden sm:block"> Snap, tag, and split bills instantly with automated receipt scanning... </p>

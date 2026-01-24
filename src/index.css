@@ -330,6 +330,6 @@ button:focus-visible {
     box-shadow: 0 4px 12px #0000001a;
     position: sticky;
     top: 0;
-    z-index: 999999999;
+    z-index: 40;
   }
 }

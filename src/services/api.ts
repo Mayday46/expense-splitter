@@ -3,7 +3,7 @@
 
 // Use your computer's IP address for mobile testing
 // Change back to 'http://localhost:8000/api' for desktop-only testing
-const API_BASE_URL = 'http://192.168.50.120:8000/api';
+const API_BASE_URL = 'http://localhost:8000/api';
 
 // Helper function to make requests with authentication
 async function apiRequest(endpoint: string, options: RequestInit = {}) {
